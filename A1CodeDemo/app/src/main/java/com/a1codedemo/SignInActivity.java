@@ -30,6 +30,7 @@ import java.util.Objects;
 
 public class SignInActivity extends AppCompatActivity {
 
+    // Constants
     private final int RC_SIGN_IN = 99;
     private final String endpoint = "http://10.0.2.2:8080/verify";
     public static final String EMAIL_EXTRA = "com.a1codedemo.email";
@@ -42,8 +43,8 @@ public class SignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        // Configure sign-in to request the user's ID, email address, and basic
-        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+        // Configure sign-in to request the user's ID, email address, and basic profile.
+        // More permissions can be requested.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.server_client_id))
                 .requestEmail()
@@ -52,6 +53,7 @@ public class SignInActivity extends AppCompatActivity {
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
+        // Register a listener for the "Sign in with Google" button.
         findViewById(R.id.sign_in_button).setOnClickListener(this::onClick);
 
         // Set the dimensions of the sign-in button.
@@ -68,13 +70,16 @@ public class SignInActivity extends AppCompatActivity {
         updateUi(account, false);
     }
 
+    // Updates the UI based on the status of signing in.
     private void updateUi(@Nullable GoogleSignInAccount account, boolean isInvalidAttempt) {
         if(Objects.isNull(account) && isInvalidAttempt) {
+            // An error occurred somewhere along the way
             TextView errorMessage = findViewById(R.id.error_message);
             errorMessage.setText("Error logging in, please try again.");
         } else if(Objects.isNull(account)) {
-            // TODO: nothing
+            // Nothing happens here.
         } else {
+            // Transition to the user info page. Include the user email and name.
             Intent intent = new Intent(this, ShowUserActivity.class);
             intent.putExtra(EMAIL_EXTRA, account.getEmail());
             intent.putExtra(NAME_EXTRA, account.getDisplayName());
@@ -82,6 +87,7 @@ public class SignInActivity extends AppCompatActivity {
         }
     }
 
+    // The listener for the "Sign in with Google" button.
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.sign_in_button:
@@ -90,23 +96,25 @@ public class SignInActivity extends AppCompatActivity {
         }
     }
 
+    // Google provides an Intent for signing in, we get it and use it.
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+        startActivityForResult(signInIntent, RC_SIGN_IN); // This will have a result.
     }
 
+    // This is where we catch that result.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
         if(requestCode == RC_SIGN_IN) {
-            // The task returned from this call is always completed. There is no need to attach a listener.
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleSignInResult(task);
         }
     }
 
+    // This is where we call our server to check if the user is new or not.
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
@@ -145,7 +153,7 @@ public class SignInActivity extends AppCompatActivity {
         } catch (JSONException e) {
             Log.w("INVALID_JSON", e.getMessage());
         } catch (Exception e) {
-            Log.w("UNEXPETED_EXCEPTION", e.getMessage());
+            Log.w("UNEXPECTED_EXCEPTION", e.getMessage());
         }
     }
 }
