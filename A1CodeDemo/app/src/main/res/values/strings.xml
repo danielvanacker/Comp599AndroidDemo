@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">A1CodeDemo</string>
+    <string name="welcome_message">Welcome to APP. Please sing in.</string>
+    <string name="button_sign_out">Logout</string>
+    <string name="button_delete_account">Delete Account</string>
+    <string name="server_client_id">ADD_ME</string>
+</resources>

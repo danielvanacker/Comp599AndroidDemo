@@ -1,0 +1,17 @@
+{
+  "name": "comp599demoserver",
+  "version": "1.0.0",
+  "description": "A demo server for Comp 599 Android workshop.",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "google-auth-library": "^6.1.6"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "CLIENT_SECRET=ADD_ME CLIENT_ID=ADD_ME node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
