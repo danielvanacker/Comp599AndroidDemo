@@ -21,17 +21,7 @@ public class ShowUserActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_user);
-
-        // Some wiring to get the email and name sent in.
-        Intent intent = getIntent();
-        String email = intent.getStringExtra(SignInActivity.EMAIL_EXTRA);
-        String name = intent.getStringExtra(SignInActivity.NAME_EXTRA);
-
-        TextView emailText = findViewById(R.id.textUserEmail);
-        TextView nameText = findViewById(R.id.textUserName);
-
-        emailText.setText(email);
-        nameText.setText(name);
+        displayUserInfo();
 
         // Create another GoogleSignInClient to sign out.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -42,6 +32,20 @@ public class ShowUserActivity extends AppCompatActivity {
         // Add listeners for the buttons.
         findViewById(R.id.sign_out_button).setOnClickListener(this::onClick);
         findViewById(R.id.delete_account_button).setOnClickListener(this::onClick);
+    }
+
+    // Displays user email and name.
+    private void displayUserInfo() {
+        // Some wiring to get the email and name sent in.
+        Intent intent = getIntent();
+        String email = intent.getStringExtra(SignInActivity.EMAIL_EXTRA);
+        String name = intent.getStringExtra(SignInActivity.NAME_EXTRA);
+
+        TextView emailText = findViewById(R.id.textUserEmail);
+        TextView nameText = findViewById(R.id.textUserName);
+
+        emailText.setText(email);
+        nameText.setText(name);
     }
 
     public void onClick(View v) {

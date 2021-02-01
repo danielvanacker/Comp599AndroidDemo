@@ -72,13 +72,19 @@ public class SignInActivity extends AppCompatActivity {
 
     // Updates the UI based on the status of signing in.
     private void updateUi(@Nullable GoogleSignInAccount account, boolean isInvalidAttempt) {
+
         if(Objects.isNull(account) && isInvalidAttempt) {
+
             // An error occurred somewhere along the way
             TextView errorMessage = findViewById(R.id.error_message);
             errorMessage.setText("Error logging in, please try again.");
+
         } else if(Objects.isNull(account)) {
+
             // Nothing happens here.
+
         } else {
+
             // Transition to the user info page. Include the user email and name.
             Intent intent = new Intent(this, ShowUserActivity.class);
             intent.putExtra(EMAIL_EXTRA, account.getEmail());
@@ -118,35 +124,11 @@ public class SignInActivity extends AppCompatActivity {
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            String idToken = account.getIdToken();
-            String json = String.format("{ \"token\": \"%s\"}", idToken);
 
-            // Create request
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, endpoint, new JSONObject(json), new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    try {
-                        String status = response.getString("status");
-                        if("success".equals(status)) {
-                            updateUi(account, true);
-                        } else {
-                            updateUi(null, true);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    // TODO: handle error
-                    mGoogleSignInClient.signOut();
-                    updateUi(null, true);
-                }
-            });
-
-            // Send request
+            // Verify user with server.
+            JsonObjectRequest jsonObjectRequest = generateRequest(account);
             SingletonRequestQueue.getInstance(this).addToRequestQueue(jsonObjectRequest);
+
         } catch (ApiException e) {
             Log.w("INVALID_LOGIN_REQUEST", e.getMessage());
             updateUi(null, true);
@@ -155,5 +137,34 @@ public class SignInActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.w("UNEXPECTED_EXCEPTION", e.getMessage());
         }
+    }
+
+    private JsonObjectRequest generateRequest(GoogleSignInAccount account) throws JSONException {
+        String idToken = account.getIdToken();
+        String json = String.format("{ \"token\": \"%s\"}", idToken);
+
+        // Create request
+        return new JsonObjectRequest(Request.Method.POST, endpoint, new JSONObject(json), new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    String status = response.getString("status");
+                    if("success".equals(status)) {
+                        updateUi(account, true);
+                    } else {
+                        updateUi(null, true);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mGoogleSignInClient.signOut();
+                updateUi(null, true);
+            }
+        });
+
     }
 }
