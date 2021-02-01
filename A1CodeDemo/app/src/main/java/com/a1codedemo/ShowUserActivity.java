@@ -22,6 +22,7 @@ public class ShowUserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_user);
 
+        // Some wiring to get the email and name sent in.
         Intent intent = getIntent();
         String email = intent.getStringExtra(SignInActivity.EMAIL_EXTRA);
         String name = intent.getStringExtra(SignInActivity.NAME_EXTRA);
@@ -32,11 +33,13 @@ public class ShowUserActivity extends AppCompatActivity {
         emailText.setText(email);
         nameText.setText(name);
 
+        // Create another GoogleSignInClient to sign out.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
+        // Add listeners for the buttons.
         findViewById(R.id.sign_out_button).setOnClickListener(this::onClick);
         findViewById(R.id.delete_account_button).setOnClickListener(this::onClick);
     }
@@ -55,6 +58,7 @@ public class ShowUserActivity extends AppCompatActivity {
     private void signOut() {
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    // This is the function that will be called once a user is logged out.
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         returnToSignInPage();
@@ -64,7 +68,6 @@ public class ShowUserActivity extends AppCompatActivity {
     }
 
     private void deleteAccount() {
-        System.out.println("hehe");
         mGoogleSignInClient.revokeAccess()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
