@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -24,7 +23,6 @@ import com.google.android.gms.tasks.Task;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONStringer;
 
 import java.util.Objects;
 
@@ -54,10 +52,10 @@ public class SignInActivity extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         // Register a listener for the "Sign in with Google" button.
-        findViewById(R.id.sign_in_button).setOnClickListener(this::onClick);
+        findViewById(R.id.buttonSignIn).setOnClickListener(this::onClick);
 
         // Set the dimensions of the sign-in button.
-        SignInButton signInButton = findViewById(R.id.sign_in_button);
+        SignInButton signInButton = findViewById(R.id.buttonSignIn);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
     }
 
@@ -96,11 +94,13 @@ public class SignInActivity extends AppCompatActivity {
     // The listener for the "Sign in with Google" button.
     public void onClick(View v) {
         switch(v.getId()) {
-            case R.id.sign_in_button:
+            case R.id.buttonSignIn:
                 signIn();
                 break;
         }
     }
+
+    // +++++++++++++++++ SIGN IN LOGIC BELOW +++++++++++++++++++++++++
 
     // Google provides an Intent for signing in, we get it and use it.
     private void signIn() {
@@ -152,6 +152,7 @@ public class SignInActivity extends AppCompatActivity {
                     if("success".equals(status)) {
                         updateUi(account, true);
                     } else {
+                        mGoogleSignInClient.signOut();
                         updateUi(null, true);
                     }
                 } catch (JSONException e) {

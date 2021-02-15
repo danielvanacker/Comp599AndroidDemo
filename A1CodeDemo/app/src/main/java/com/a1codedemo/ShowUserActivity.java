@@ -30,8 +30,8 @@ public class ShowUserActivity extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         // Add listeners for the buttons.
-        findViewById(R.id.sign_out_button).setOnClickListener(this::onClick);
-        findViewById(R.id.delete_account_button).setOnClickListener(this::onClick);
+        findViewById(R.id.buttonSignOut).setOnClickListener(this::onClick);
+        findViewById(R.id.buttonDeleteAccount).setOnClickListener(this::onClick);
     }
 
     // Displays user email and name.
@@ -50,10 +50,10 @@ public class ShowUserActivity extends AppCompatActivity {
 
     public void onClick(View v) {
         switch(v.getId()) {
-            case R.id.sign_out_button:
+            case R.id.buttonSignOut:
                 signOut();
                 break;
-            case R.id.delete_account_button:
+            case R.id.buttonDeleteAccount:
                 deleteAccount();
                 break;
         }

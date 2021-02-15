@@ -7,7 +7,7 @@
     tools:context=".SignInActivity">
 
     <com.google.android.gms.common.SignInButton
-        android:id="@+id/sign_in_button"
+        android:id="@+id/buttonSignIn"
         android:layout_width="242dp"
         android:layout_height="49dp"
         android:layout_marginTop="128dp"
@@ -23,7 +23,7 @@
         android:layout_marginTop="24dp"
         android:layout_marginBottom="16dp"
         android:text="@string/welcome_message"
-        app:layout_constraintBottom_toTopOf="@+id/sign_in_button"
+        app:layout_constraintBottom_toTopOf="@+id/buttonSignIn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
